@@ -74,11 +74,11 @@
   {% set sql_header = test_configuration.options.get("sql_header") %}
 
   {%- set actual_query -%}
-    select count(1) as count, {{columns}} from ( {{ model_complete_sql }} ) as s group by {{ columns }}
+    select {{columns}} from ( {{ model_complete_sql }} ) as s
   {% endset %}
 
   {%- set expectations_query -%}
-    select count(1) as count, {{columns}} from ({{ expectations.input_values }}) as s group by {{ columns }}
+    select {{columns}} from ({{ expectations.input_values }}) as s
   {% endset %}
 
   {%- set test_query -%}
@@ -94,14 +94,14 @@
     ),
 
     extra_entries as (
-    select '+' as diff, count, {{columns}} from actual
+    select '+' as diff, {{columns}} from actual
     {{ except() }}
-    select '+' as diff, count, {{columns}} from expectations),
+    select '+' as diff, {{columns}} from expectations),
 
     missing_entries as (
-    select '-' as diff, count, {{columns}} from expectations
+    select '-' as diff, {{columns}} from expectations
     {{ except() }}
-    select '-' as diff, count, {{columns}} from actual)
+    select '-' as diff, {{columns}} from actual)
     
     select * from extra_entries
     UNION ALL
